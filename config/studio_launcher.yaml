@@ -1,0 +1,10 @@
+package_name: 'Studio Launcher'
+job_path: r'D:\Projects\jobs'
+projects:
+  live:
+    - vfx_rnd
+    - vfx_test
+    - vfx_pipe
+  archived:
+    - vfx_dhaka
+    - vfx_otp
