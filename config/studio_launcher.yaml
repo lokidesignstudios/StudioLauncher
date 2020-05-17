@@ -1,5 +1,5 @@
 package_name: 'Studio Launcher'
-job_path: r'D:\Projects\jobs'
+jobs_path: 'D:\Projects\jobs'
 projects:
   live:
     - vfx_rnd

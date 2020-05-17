@@ -4,12 +4,14 @@ import yaml
 import PySide2.QtWidgets as QtWidgets
 import PySide2.QtCore as QtCore
 import PySide2.QtGui as QtGui
+import qdarkstyle
 
 curr_dir = os.path.dirname(os.path.abspath(__file__))
 print(curr_dir)
 with open(curr_dir + '/../config/studio_launcher.yaml', 'r') as yaml_file:
     studio_config = yaml.load(yaml_file, Loader=yaml.FullLoader)
 icons_path = '../icons'
+jobs_path = studio_config['jobs_path']
 print(studio_config)
 
 
@@ -27,13 +29,9 @@ class StudioLauncher(QtWidgets.QWidget):
         Create all the widgets required for the tool here
         :return: None
         """
-        self.name_lbl = QtWidgets.QLabel('Name: ')
-        self.name_le = QtWidgets.QLineEdit()
-        self.all_chb = QtWidgets.QCheckBox('All')
-        self.selected_chb = QtWidgets.QCheckBox('Selected')
-        self.hidden_chb = QtWidgets.QCheckBox('Hidden')
-        self.locked_chb = QtWidgets.QCheckBox('Locked')
-        self.run_btn = QtWidgets.QPushButton('Run')
+        self.prj_lbl = QtWidgets.QLabel('Projects')
+        self.shot_lbl = QtWidgets.QLabel('Shot')
+        self.task_lbl = QtWidgets.QLabel('Task')
 
     def create_layout(self):
         """
@@ -46,47 +44,55 @@ class StudioLauncher(QtWidgets.QWidget):
 
         h_box1 = QtWidgets.QHBoxLayout()
         live_projects = studio_config['projects']['live']
-        for prj in live_projects:
-            prj_lbl = QtWidgets.QLabel(prj)
-            prj_icon = QtWidgets.QLabel(prj)
-            icon = icons_path + '/' + prj + '.jpg'
-            if os.path.exists(icon):
-                prj_icon.setPixmap(icon)
-            else:
-                icon = icons_path + '/default.jpg'
-                prj_icon.setPixmap(icon)
+        vbox_prj = QtWidgets.QListWidget()
+        vbox_shot = QtWidgets.QVBoxLayout()
+        vbox_task = QtWidgets.QVBoxLayout()
+        for prj_name in live_projects:
+            prj_wdg = Project(prj_name)
+            vbox_prj.addWidget(self.prj_lbl)
+            vbox_prj.addWidget(prj_wdg)
+            print(prj_name)
 
-            prj_lbl.setText(prj)
-            vbox = QtWidgets.QVBoxLayout()
-            vbox.addWidget(prj_icon)
-            vbox.addWidget(prj_lbl)
-            h_box1.addLayout(vbox)
-            print(prj)
-
-        h_box2 = QtWidgets.QHBoxLayout()
-        h_box2.addWidget(self.all_chb)
-        h_box2.addWidget(self.selected_chb)
-        h_box2.addWidget(self.hidden_chb)
-        h_box2.addWidget(self.locked_chb)
-
-        h_box3 = QtWidgets.QHBoxLayout()
-        h_box3.addWidget(self.run_btn)
+        h_box1.addLayout(vbox_prj)
 
         main_layout.addLayout(h_box1)
-        main_layout.addLayout(h_box2)
-        main_layout.addLayout(h_box3)
+
+    def get_shots(self):
 
 
 class Project(QtWidgets.QWidget):
-    def __init__(self):
+    """
+    This Class represents Project/Job
+    """
+    def __init__(self, prj_name):
         super(Project, self).__init__()
-        pass
+        self.create_widget(prj_name)
+        self.create_layout()
+
+    def create_widget(self, prj_name):
+        self.prj_name = QtWidgets.QLabel(prj_name)
+        self.prj_icon = QtWidgets.QLabel(prj_name)
+        self.prj_icon.setFixedSize(150, 150)
+        self.icon = icons_path + '/' + prj_name + '.jpg'
+        if os.path.exists(self.icon):
+            self.prj_icon.setPixmap(self.icon)
+        else:
+            icon = icons_path + '/default.jpg'
+            self.prj_icon.setPixmap(icon)
+
+        self.prj_name.setText(prj_name)
+
+    def create_layout(self):
+        main_layout = QtWidgets.QHBoxLayout()
+        main_layout.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft)
+        self.setLayout(main_layout)
+        main_layout.addWidget(self.prj_icon)
+        main_layout.addWidget(self.prj_name)
 
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    icon = QtGui.QIcon(icons_path + '/vfx_rnd.jpg')
-    app.setWindowIcon(icon)
+    # app.setStyleSheet(qdarkstyle.load_stylesheet_pyside2())
     dialog = StudioLauncher()
     dialog.show()
     sys.exit(app.exec_())
