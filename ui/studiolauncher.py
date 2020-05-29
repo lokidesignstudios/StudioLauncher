@@ -97,6 +97,7 @@ class StudioLauncher(QtWidgets.QWidget):
         self.prj_list_wdg.itemClicked.connect(self.get_sequence)
         self.seq_list_wdg.itemClicked.connect(self.get_shots)
         self.shot_list_wdg.itemClicked.connect(self.get_task)
+        self.maya_btn.clicked.connect(self.prepare_maya_env)
 
     def get_projects(self):
         live_projects = studio_config['projects']['live']
@@ -142,6 +143,20 @@ class StudioLauncher(QtWidgets.QWidget):
                 self.task_list_wdg.addItems(task_list)
                 print(task_list)
                 return task_list
+
+    def prepare_maya_env(self):
+        try:
+            prj_sel = self.prj_list_wdg.selectedItems()[0]
+            seq_sel = self.seq_list_wdg.selectedItems()[0]
+            shot_sel = self.shot_list_wdg.selectedItems()[0]
+            task_sel = self.task_list_wdg.selectedItems()[0]
+            maya_prj_path = os.path.join(jobs_path, prj_sel.text(),
+                                         seq_sel.text(), shot_sel.text(),
+                                         task_sel.text(), 'maya')
+            if os.path.exists(maya_prj_path):
+                os.environ['MAYA_PROJECT'] = maya_prj_path
+        except IndexError as e:
+            print('No Seq, Shot or Task is selected:', e)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 package_name: 'Studio Launcher'
 jobs_path: 'D:\Projects\jobs'
+show_template: 'D:\Projects\data\show_templates\feature_3d'
 projects:
   live:
     - vfx_rnd
@@ -8,3 +9,28 @@ projects:
   archived:
     - vfx_dhaka
     - vfx_otp
+
+asset_type:
+  - cam
+  - char
+  - crowd
+  - env
+  - fx
+  - prop
+  - veh
+
+task_type:
+  - anim
+  - cfx
+  - comp
+  - default
+  - dmp
+  - fx
+  - layout
+  - light
+  - lookdev
+  - matchmove
+  - model
+  - paint
+  - roto
+  - texture

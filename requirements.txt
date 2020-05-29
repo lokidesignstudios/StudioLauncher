@@ -1,0 +1,6 @@
+PySide2==5.14.2
+PyYAML==5.3.1
+QDarkStyle==2.8.1
+QtPy==1.9.0
+shiboken2==5.14.2
+six==1.14.0
